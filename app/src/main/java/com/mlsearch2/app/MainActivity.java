@@ -1,12 +1,14 @@
 package com.mlsearch2.app;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 
 public class MainActivity extends ActionBarActivity {
@@ -17,6 +19,11 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        // Restore query
+        SharedPreferences settings = getPreferences(0);
+        String query = settings.getString("query", "");
+        EditText editText = (EditText) findViewById(R.id.editText);
+        editText.setText(query, TextView.BufferType.EDITABLE);
     }
 
 
@@ -50,6 +57,12 @@ public class MainActivity extends ActionBarActivity {
         else {
             Intent intent = new Intent(this, ListActivity.class);
             String query = editText.getText().toString();
+
+            SharedPreferences settings = getPreferences(0);
+            SharedPreferences.Editor editor = settings.edit();
+            editor.putString("query", query);
+            editor.commit();
+
             intent.putExtra(QUERY, query);
             startActivity(intent);
         }
